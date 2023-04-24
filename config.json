@@ -1,0 +1,17 @@
+{
+  "name": "Demo app",
+  "type": "app",
+  "version": "2.0.0",
+  "description": "Test app",
+  "categories": ["images", "export"],
+  "main_script": "src/main.py",
+  "task_location": "workspace_tasks",
+  "isolate": true,
+  "headless": true,
+  "context_menu": {
+    "target": ["images_project", "images_dataset"],
+    "context_root": "Download as"
+  },
+  "docker_image": "supervisely/base-py-sdk:6.71.17",
+  "instance_version": "6.6.7"
+}
