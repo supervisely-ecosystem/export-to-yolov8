@@ -95,7 +95,7 @@ def process_images(api, project_meta, ds, class_names, progress, dir_names):
                     yolov8_line = transform_label(class_names, ann.img_size, label)
                     yolov8_ann.append(yolov8_line)
                 except Exception as e:
-                    sly.logger.warn(f'Label skipped. Error:{e}')
+                    sly.logger.warn(f'Label on image "{img_name}" skipped. {e}')
 
             image_processed = False
 
