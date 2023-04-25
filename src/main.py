@@ -48,7 +48,6 @@ def check_tagmetas(meta):
 def transform_label(class_names, img_size, label: sly.Label):
     class_number = class_names.index(label.obj_class.name)
     if type(label.geometry) not in [sly.Bitmap, sly.Polygon]:
-        sly.logger.warn(f"Class shape: {label.geometry}")
         raise RuntimeError(f"Label has unsupported geometry: {label.geometry.geometry_name()}.")
 
     if type(label.geometry) is sly.Bitmap:
@@ -90,9 +89,13 @@ def process_images(api, project_meta, ds, class_names, progress, dir_names):
             ann_json = ann_info.annotation
             ann = sly.Annotation.from_json(ann_json, project_meta)
 
-            yolov5_ann = []
+            yolov8_ann = []
             for label in ann.labels:
-                yolov5_ann.append(transform_label(class_names, ann.img_size, label))
+                try:
+                    yolov8_line = transform_label(class_names, ann.img_size, label)
+                    yolov8_ann.append(yolov8_line)
+                except Exception as e:
+                    sly.logger.warn(f'Label skipped. Error:{e}')
 
             image_processed = False
 
@@ -101,7 +104,7 @@ def process_images(api, project_meta, ds, class_names, progress, dir_names):
                 ann_path = os.path.join(val_labels_dir, f"{sly.fs.get_file_name(img_name)}.txt")
                 val_anns.append(ann_path)
 
-                _write_new_ann(ann_path, yolov5_ann)
+                _write_new_ann(ann_path, yolov8_ann)
                 img_path = os.path.join(val_images_dir, img_name)
                 val_image_paths.append(img_path)
                 image_processed = True
@@ -112,7 +115,7 @@ def process_images(api, project_meta, ds, class_names, progress, dir_names):
                 ann_path = os.path.join(train_labels_dir, f"{sly.fs.get_file_name(img_name)}.txt")
                 train_anns.append(ann_path)
 
-                _write_new_ann(ann_path, yolov5_ann)
+                _write_new_ann(ann_path, yolov8_ann)
                 img_path = os.path.join(train_imgs_dir, img_name)
                 train_img_paths.append(img_path)
                 image_processed = True
