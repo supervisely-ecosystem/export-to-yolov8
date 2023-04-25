@@ -48,7 +48,7 @@ def check_tagmetas(meta):
 def transform_label(class_names, img_size, label: sly.Label):
     class_number = class_names.index(label.obj_class.name)
     if type(label.geometry) not in [sly.Bitmap, sly.Polygon]:
-        raise RuntimeError(f"Label has unsupported geometry: {label.geometry.geometry_name()}.")
+        raise RuntimeError(f'Unsupported "{label.geometry.geometry_name()}" geometry.')
 
     if type(label.geometry) is sly.Bitmap:
         new_obj_class = sly.ObjClass(label.obj_class.name, sly.Polygon)
@@ -95,7 +95,7 @@ def process_images(api, project_meta, ds, class_names, progress, dir_names):
                     yolov8_line = transform_label(class_names, ann.img_size, label)
                     yolov8_ann.append(yolov8_line)
                 except Exception as e:
-                    sly.logger.warn(f'Label on image "{img_name}" skipped. {e}')
+                    sly.logger.warn(f'Label skipped: {e}')
 
             image_processed = False
 
