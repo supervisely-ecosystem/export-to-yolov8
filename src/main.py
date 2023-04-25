@@ -47,11 +47,11 @@ def check_tagmetas(meta):
 
 def transform_label(class_names, img_size, label: sly.Label):
     class_number = class_names.index(label.obj_class.name)
-    if label.geometry.geometry_name() not in ["polygon", "bitmap", "rectangle"]:
+    if type(label.geometry) not in [sly.Bitmap, sly.Polygon]:
         sly.logger.warn(f"Class shape: {label.geometry}")
         raise RuntimeError(f"Label has unsupported geometry: {label.geometry.geometry_name()}.")
 
-    if label.geometry.geometry_name() in ["bitmap", "rectangle"]:
+    if type(label.geometry) is sly.Bitmap:
         new_obj_class = sly.ObjClass(label.obj_class.name, sly.Polygon)
         label = label.convert(new_obj_class)[0]
 
