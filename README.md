@@ -1,8 +1,8 @@
 # export-to-yolov8
 Export Supervisely project in YOLOv8 format (downloadable tar archive)
 
-<!-- <div align="center" markdown>
-<img src="https://user-images.githubusercontent.com/106374579/183683758-89476d80-de3f-424f-9bfa-f1562703a168.png"/> -->
+<div align="center" markdown>
+<!-- <img src="https://user-images.githubusercontent.com/106374579/183683758-89476d80-de3f-424f-9bfa-f1562703a168.png"/> -->
 
 # Export masks from Supervisely to YOLOv8 format
 
