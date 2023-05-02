@@ -5,7 +5,7 @@
   "icon": "https://user-images.githubusercontent.com/115161827/235631477-3c5c5364-3818-4bd7-ba72-341712ddde28.jpg",
   "icon_cover": true,
   "poster": "https://user-images.githubusercontent.com/115161827/235631478-31056b4a-4945-4962-aef0-4bd5b7b73956.png",
-  "description": "Test app",
+  "description": "Transform Supervisely format to YOLOv8 format",
   "categories": ["images", "export"],
   "main_script": "src/main.py",
   "task_location": "workspace_tasks",
