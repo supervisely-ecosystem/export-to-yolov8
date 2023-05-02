@@ -29,26 +29,28 @@ Supervisely project has to contain only classes with shape `Polygon` or/and `Bit
 
 - [Convert Class Shape](https://ecosystem.supervise.ly/apps/convert-class-shape) - app allows to convert labels to different class shapes.  
     
-    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/convert-class-shape" src="xxx" height="70px" margin-bottom="20px"/>
+    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/convert-class-shape" src="https://user-images.githubusercontent.com/115161827/235643553-d5dd001e-22ef-4e74-a303-b7cfd251b7fd.png" height="70px" margin-bottom="20px"/>
 
 In addition, YOLOv8 format implies the presence of train/val datasets. Thus, to split images on training and validation datasets you should assign  corresponding tags (`train` or `val`) to images. If image doesn't have such tags, it will be treated as `train`. We recommend to use app `Assign train/val tags to images`. 
 
 - [Assign train/val tags to images](https://ecosystem.supervise.ly/apps/tag-train-val-test) - app allows to assign train/val tags to images.  
     
-    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/tag-train-val-test" src="xxx" height="70px" margin-bottom="20px"/>
+    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/tag-train-val-test" src="https://user-images.githubusercontent.com/115161827/235643549-d0f4ea23-c75e-46f2-8767-3d786eb79207.png" height="70px" margin-bottom="20px"/>
     
 # How to Run 
 1. Add app to your team from [Ecosystem](https://ecosystem.supervise.ly/apps/export-to-yolov8) if it is not there.
 
 2. Open context menu of project -> `Download as` -> `Export to YOLO v8 format` 
-<img src="xxx" />
+<img src="https://user-images.githubusercontent.com/115161827/235641219-43f67765-99ff-4ece-803b-3cbbb07011c4.png" />
 
+You can also run the application from the Ecosystem
+<img src="https://user-images.githubusercontent.com/115161827/235641214-50e93901-3c4b-4976-911b-c50940e84972.png" />
 
 # How to Use
 
 App creates task in `workspace tasks` list. Once app is finished, you will see download link to resulting tar archive. 
 
-<img src="xxx" />
+<img src="https://user-images.githubusercontent.com/115161827/235643943-8e4d6be2-56aa-46bf-b4bb-c017e93b32a0.png" />
 
 Resulting archive is saved in : 
 
@@ -58,11 +60,9 @@ For example our file path is the following:
 
 `/tmp/supervisely/export/Export to YOLOv8 format/32803/20600_Demo.tar`.
 
-<img src="xxx" />
-
 If there are no `train` or `val` tags in project, special warning is printed. You will see all warnings in task logs.
 
-<img src="xxx" />
+<img src="https://user-images.githubusercontent.com/115161827/235644472-16b3076e-7929-42c3-9f8c-7c1dcb0ca6be.png" />
 
 
 Here is the example of `data_config.yaml` that you will find in archive:
