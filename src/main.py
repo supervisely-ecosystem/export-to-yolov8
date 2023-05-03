@@ -174,6 +174,7 @@ class MyExport(sly.app.Export):
         all_paths = {}
         all_ids = {}
         all_anns = {}
+        total_images_count = 0
 
         progress = sly.Progress("Transformation ...", images_count)
         for ds in datasets:
@@ -190,8 +191,10 @@ class MyExport(sly.app.Export):
             all_anns[ds.id] = {"train_anns": train_anns}
             all_anns[ds.id]["val_anns"] = val_anns
 
-        images_count = len(all_paths[ds.id]["train_paths"]) + len(all_paths[ds.id]["val_paths"])
-        download_progress = sly.Progress("Downloading images ...", images_count)
+            total_images_count += len(train_img_paths)
+            total_images_count += len(val_image_paths)
+
+        download_progress = sly.Progress("Downloading images ...", total_images_count)
         for ds in datasets:
             api.image.download_paths(
                 ds.id,
