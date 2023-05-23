@@ -1,7 +1,7 @@
 <div align="center" markdown>
 <img src="https://user-images.githubusercontent.com/115161827/235631478-31056b4a-4945-4962-aef0-4bd5b7b73956.png"/>
 
-# Export to YOLOv8 format
+# Export to YOLOv8 segmentation format
 
 <p align="center">
   <a href="#Overview">Overview</a> •
@@ -20,8 +20,27 @@
 
 # Overview
 
-Transform images project in Supervisely ([link to format](https://docs.supervise.ly/data-organization/00_ann_format_navi)) to [YOLO v8 segmentation format](https://docs.ultralytics.com/tasks/segment/#dataset-format) and prepares downloadable `tar` archive.
+Application for **segmentation tasks** that transforms a dataset from the [Supervisely format](https://docs.supervise.ly/data-organization/00_ann_format_navi) to the Yolov8 segmentation format ([learn more here](https://docs.ultralytics.com/datasets/segment/)) and prepares downloadable `tar` archive.
 
+Label Format:
+
+- For each image, a corresponding `.txt` file with the same name is created in the `labels` folder. 
+- Each object is represented by a separate line in the file, containing the `class-index` and the coordinates of the bounding mask, normalized to the range of 0 to 1 (relative to the image dimensions). 
+
+The format for a single row in the **segmentation** dataset output files is as follows:
+
+```
+<class-index> <x1> <y1> <x2> <y2> ... <xn> <yn>
+```
+
+In this format, `<class-index>` is the index of the class for the object, and `<x1> <y1> <x2> <y2> ... <xn> <yn>` are the bounding coordinates of the object's segmentation mask. The coordinates are separated by spaces.
+
+Here is an example of the YOLO instance segmentation dataset format for a single image with two object instances:
+
+```
+0 0.6812 0.48541 0.67 0.4875 0.67656 0.487 0.675 0.489 0.66
+1 0.5046 0.0 0.5015 0.004 0.4984 0.00416 0.4937 0.010 0.492 0.0104
+```
 
 # Preparation
 
