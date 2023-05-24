@@ -45,7 +45,7 @@ Here is an example of the YOLO instance segmentation dataset format for a single
 1 0.5046 0.0 0.5015 0.004 0.4984 0.00416 0.4937 0.010 0.492 0.0104
 ```
 
-Learn more about Yolov8 format [here](https://docs.ultralytics.com/datasets/segment/).
+Learn more about Yolov8 segmentation format [here](https://docs.ultralytics.com/datasets/segment/).
 
 # Preparation
 
