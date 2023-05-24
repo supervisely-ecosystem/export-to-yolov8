@@ -20,11 +20,14 @@
 
 # Overview
 
-Application for **segmentation tasks** that transforms a dataset from the [Supervisely format](https://docs.supervise.ly/data-organization/00_ann_format_navi) to the Yolov8 segmentation format ([learn more here](https://docs.ultralytics.com/datasets/segment/)) and prepares downloadable `tar` archive.
+This application is designed specifically for instance segmentation tasks. 
+
+It transforms datasets from the [Supervisely format](https://docs.supervise.ly/data-organization/00_ann_format_navi) to the **YOLOv8 segmentation format**. 
+By using this application, you can effortlessly convert your dataset and download as `tar` archive.
 
 Label Format:
 
-- For each image, a corresponding `.txt` file with the same name is created in the `labels` folder. 
+- Each image in the dataset has a corresponding text file with the same name as the image file and the `.txt` extension in the `labels` folder. 
 - Each object is represented by a separate line in the file, containing the `class-index` and the coordinates of the bounding mask, normalized to the range of 0 to 1 (relative to the image dimensions). 
 
 The format for a single row in the **segmentation** dataset output files is as follows:
@@ -41,6 +44,8 @@ Here is an example of the YOLO instance segmentation dataset format for a single
 0 0.6812 0.48541 0.67 0.4875 0.67656 0.487 0.675 0.489 0.66
 1 0.5046 0.0 0.5015 0.004 0.4984 0.00416 0.4937 0.010 0.492 0.0104
 ```
+
+Learn more about Yolov8 format [here](https://docs.ultralytics.com/datasets/segment/).
 
 # Preparation
 
