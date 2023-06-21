@@ -51,9 +51,6 @@ def transform_label(class_names, img_size, label: sly.Label):
     if type(label.geometry) not in [sly.Bitmap, sly.Polygon]:
         raise RuntimeError(f'Unsupported "{label.geometry.geometry_name()}" geometry.')
 
-    # if type(label.geometry) is sly.Bitmap:
-    #     new_obj_class = sly.ObjClass(label.obj_class.name, sly.Polygon)
-        # label = label.convert(new_obj_class)[0]
     if type(label.geometry) is sly.Bitmap:
         new_obj_class = sly.ObjClass(label.obj_class.name, sly.Polygon)
         labels = label.convert(new_obj_class)
@@ -62,24 +59,17 @@ def transform_label(class_names, img_size, label: sly.Label):
                 points = label.geometry.exterior_np
             else:
                 points = np.concatenate((points, label.geometry.exterior_np), axis=0)
-
-    elif type(label.geometry) is sly.Polygon:
+    else:
         points = label.geometry.exterior_np
+
     points = np.flip(points, axis=1)
-    scaled_points = []
+    xy = []
     for point in points:
-        scaled_points.append(round(point[0] / img_size[1], 6))
-        scaled_points.append(round(point[1] / img_size[0], 6))
-    scaled_points_str = " ".join([str(point) for point in scaled_points])
-    result = f"{class_number} {scaled_points_str}"
+        xy.append(round(point[0] / img_size[1], 6))
+        xy.append(round(point[1] / img_size[0], 6))
+    xy_str = " ".join([str(point) for point in xy])
+    result = f"{class_number} {xy_str}"
     return result
-    # coords = label.to_json()["points"]["exterior"]
-    # xy = []
-    # for coord in coords:
-    #     xy.append(str(round(coord[0] / img_size[1], 6)))
-    #     xy.append(str(round(coord[1] / img_size[0], 6)))
-    # polygon_points = f"{class_number} {' '.join(xy)}"
-    # return polygon_points
 
 
 def process_images(api, project_meta, ds, class_names, progress, dir_names):
