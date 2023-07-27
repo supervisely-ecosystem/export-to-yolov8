@@ -54,6 +54,8 @@ def transform_label(class_names, img_size, label: sly.Label):
     if type(label.geometry) is sly.Bitmap:
         new_obj_class = sly.ObjClass(label.obj_class.name, sly.Polygon)
         labels = label.convert(new_obj_class)
+        if len(labels) == 0:
+            return None
         for i, label in enumerate(labels):
             if i == 0:
                 points = label.geometry.exterior_np
@@ -102,7 +104,8 @@ def process_images(api, project_meta, ds, class_names, progress, dir_names):
             for label in ann.labels:
                 try:
                     yolov8_line = transform_label(class_names, ann.img_size, label)
-                    yolov8_ann.append(yolov8_line)
+                    if yolov8_line is not None:
+                        yolov8_ann.append(yolov8_line)
                 except Exception as e:
                     sly.logger.warn(f'Label skipped: {e}')
 
