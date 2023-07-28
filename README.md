@@ -7,7 +7,8 @@
   <a href="#Overview">Overview</a> •
   <a href="#Preparation">Preparation</a> •
   <a href="#How-to-Run">How to Run</a> •
-  <a href="#How-to-Use">How to Use</a>
+  <a href="#How-to-Use">How to Use</a> •
+  <a href="#Related-apps">Related apps</a>
 </p>
   
 [![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/export-to-yolov8)
@@ -99,3 +100,11 @@ nc: 2                           # number of classes
 train: ../lemons/images/train   # path to train imgs
 val: ../lemons/images/val       # path to val imgs
 ```
+
+# Related apps
+
+- [Train YOLOv8](https://ecosystem.supervise.ly/apps/supervisely-ecosystem/yolov8/train) - app allows to create custom YOLOv8 weights through training process.
+    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/yolov8/train" src="https://github.com/supervisely-ecosystem/yolov8/assets/115161827/82348f9a-38fc-4736-885c-d6786e37a218" height="70px" margin-bottom="20px"/>
+
+- [Serve YOLOv8](https://ecosystem.supervise.ly/apps/yolov8/serve) - app allows to deploy YOLOv8 model as REST API service.   
+    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/yolov8/serve" src="https://github.com/supervisely-ecosystem/yolov8/assets/115161827/721f5344-013c-4466-bc05-88cc3efef5ca" height="70px" margin-bottom="20px"/>
