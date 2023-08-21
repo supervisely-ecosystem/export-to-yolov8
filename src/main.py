@@ -74,7 +74,7 @@ def transform_label(class_names, img_size, label: sly.Label):
     return result
 
 
-def process_images(api, project_meta, ds, class_names, progress, dir_names):
+def process_images(api, project_meta, ds, class_names, progress, dir_names, skipped_classes):
     train_ids = []
     train_img_paths = []
     train_anns = []
@@ -108,6 +108,8 @@ def process_images(api, project_meta, ds, class_names, progress, dir_names):
                         yolov8_ann.append(yolov8_line)
                 except Exception as e:
                     sly.logger.warn(f'Label skipped: {e}')
+                    skipped_classes.append(label.obj_class.name)
+
 
             image_processed = False
 
@@ -187,10 +189,11 @@ class MyExport(sly.app.Export):
         all_ids = {}
         all_anns = {}
         total_images_count = 0
+        skipped = []
 
         progress = sly.Progress("Transformation ...", images_count)
         for ds in datasets:
-            train_info, val_info = process_images(api, meta, ds, class_names, progress, dir_names)
+            train_info, val_info = process_images(api, meta, ds, class_names, progress, dir_names, skipped)
             train_ids, train_img_paths, train_anns = train_info
             val_ids, val_image_paths, val_anns = val_info
 
@@ -222,6 +225,13 @@ class MyExport(sly.app.Export):
             )
 
         prepare_yaml(result_dir_name, result_dir, class_names, class_colors)
+
+        sly.logger.info(f"Export finished. Total images count: {total_images_count}")
+        skipped_cnt = len(skipped)
+        if skipped_cnt > 0:
+            skipped_classes = set(skipped)
+            msg = f'Project contains {skipped_cnt} labels with unsupported geometry of classes: {skipped_classes}'
+            sly.logger.warn(msg)
 
         return result_dir
 
