@@ -238,7 +238,8 @@ class MyExport(sly.app.Export):
 
             msg = (
                 f"{skipped_cnt} labels skipped on {skipped_images_cnt} images. "
-                f"{len(cls_geom_pairs)} classes have unsupported geometry: {cls_geom_pairs}"
+                f"{len(cls_geom_pairs)} classes have unsupported geometry: {cls_geom_pairs}. "
+                f"Use 'Convert Class Shape' app to convert unsupported shapes."
             )
             sly.logger.warn(msg)
 
