@@ -11,6 +11,7 @@
         "export"
     ],
     "main_script": "src/main.py",
+    "modal_template": "src/modal.html",
     "task_location": "workspace_tasks",
     "isolate": true,
     "headless": true,
