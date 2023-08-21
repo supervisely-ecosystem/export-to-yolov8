@@ -11,6 +11,7 @@
         "export"
     ],
     "main_script": "src/main.py",
+    "modal_template": "src/modal.html",
     "task_location": "workspace_tasks",
     "isolate": true,
     "headless": true,
@@ -21,6 +22,6 @@
         ],
         "context_root": "Download as"
     },
-    "docker_image": "supervisely/import-export:0.0.5",
+    "docker_image": "supervisely/import-export:6.72.108",
     "instance_version": "6.6.7"
 }
