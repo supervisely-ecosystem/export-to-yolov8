@@ -229,8 +229,8 @@ class MyExport(sly.app.Export):
         sly.logger.info(f"Export finished. Total images count: {total_images_count}")
         skipped_cnt = len(skipped)
         if skipped_cnt > 0:
-            skipped_classes = set(skipped)
-            msg = f'Project contains {skipped_cnt} labels with unsupported geometry of classes: {skipped_classes}'
+            skipped_str = ', '.join(set(skipped))
+            msg = f'{skipped_cnt} labels with unsupported geometry ({len(set(skipped))} classes: {skipped_str})'
             sly.logger.warn(msg)
 
         return result_dir
