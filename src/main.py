@@ -107,8 +107,8 @@ def process_images(api, project_meta, ds, class_names, progress, dir_names, skip
                     if yolov8_line is not None:
                         yolov8_ann.append(yolov8_line)
                 except Exception as e:
-                    sly.logger.warn(f'Label skipped: {e}')
-                    skipped_classes.append(label.obj_class.name)
+                    sly.logger.info(f'Label skipped: {e}')
+                    skipped_classes.append((label.obj_class.name, type(label.geometry), img_name))
 
 
             image_processed = False
@@ -229,8 +229,14 @@ class MyExport(sly.app.Export):
         sly.logger.info(f"Export finished. Total images count: {total_images_count}")
         skipped_cnt = len(skipped)
         if skipped_cnt > 0:
-            skipped_str = ', '.join(set(skipped))
-            msg = f'{skipped_cnt} labels with unsupported geometry ({len(set(skipped))} classes: {skipped_str})'
+            skipped_classes, skipped_geometries, skipped_images = zip(*skipped)
+            skipped_images_cnt = len(set(skipped_images))
+            cls_geom_pairs = {cls: geom for cls, geom in set(zip(skipped_classes, skipped_geometries))}
+
+            msg = (
+                f'{skipped_cnt} labels skipped on {skipped_images_cnt} images. '
+                f'({len(cls_geom_pairs)} classes have unsupported geometry: {cls_geom_pairs})'
+            )
             sly.logger.warn(msg)
 
         return result_dir
