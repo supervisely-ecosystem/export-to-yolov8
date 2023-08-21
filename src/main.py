@@ -229,9 +229,9 @@ class MyExport(sly.app.Export):
         sly.logger.info(f"Export finished. Total images count: {total_images_count}")
         skipped_cnt = len(skipped)
         if skipped_cnt > 0:
-            skipped_classes, skipped_geometries, skipped_images = zip(*skipped)
+            _, _, skipped_images = zip(*skipped)
             skipped_images_cnt = len(set(skipped_images))
-            cls_geom_pairs = {cls: geom for cls, geom in set(zip(skipped_classes, skipped_geometries))}
+            cls_geom_pairs = {f'{c} ({g.geometry_name()})' for c, g, i in zip(*skipped)}
 
             msg = (
                 f'{skipped_cnt} labels skipped on {skipped_images_cnt} images. '
