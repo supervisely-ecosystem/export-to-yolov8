@@ -13,7 +13,6 @@ if sly.is_development():
     load_dotenv(os.path.expanduser("~/supervisely.env"))
 
 
-batch_size = 10
 TRAIN_TAG_NAME = "train"
 VAL_TAG_NAME = "val"
 
