@@ -139,8 +139,7 @@ def process_images(api, project_meta, ds, class_names, progress, dir_names, skip
 
         progress.iters_done_report(len(batch))
 
-    sly.logger.info("Number of images in train == {}".format(train_count))
-    sly.logger.info("Number of images in val == {}".format(val_count))
+    sly.logger.info(f"DATASET '{ds.name}': {train_count} images for train, {val_count} images for validation")
 
     train_info = [train_ids, train_img_paths, train_anns]
     val_info = [val_ids, val_image_paths, val_anns]
