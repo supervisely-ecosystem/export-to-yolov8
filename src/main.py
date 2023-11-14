@@ -5,6 +5,8 @@ import numpy as np
 
 from dotenv import load_dotenv
 
+from supervisely import handle_exceptions
+
 
 if sly.is_development():
     load_dotenv("local.env")
@@ -12,7 +14,6 @@ if sly.is_development():
 
 
 batch_size = 10
-STORAGE_DIR = sly.app.get_data_dir()
 TRAIN_TAG_NAME = "train"
 VAL_TAG_NAME = "val"
 
@@ -163,6 +164,7 @@ def prepare_yaml(result_dir_name, result_dir, class_names, class_colors):
 class MyExport(sly.app.Export):
     def process(self, context: sly.app.Export.Context):
         api = sly.Api.from_env()
+        storage_dir = sly.app.get_data_dir()
 
         project = api.project.get_info_by_id(id=context.project_id)
         if context.dataset_id is not None:
@@ -174,7 +176,7 @@ class MyExport(sly.app.Export):
         for ds in datasets:
             images_count += ds.images_count
         result_dir_name = f"{project.id}_{project.name}"
-        result_dir = os.path.join(STORAGE_DIR, result_dir_name)
+        result_dir = os.path.join(storage_dir, result_dir_name)
         sly.fs.mkdir(result_dir)
 
         dir_names = prepare_trainval_dirs(result_dir)
@@ -246,5 +248,11 @@ class MyExport(sly.app.Export):
         return result_dir
 
 
-app = MyExport()
-app.run()
+@handle_exceptions
+def main():
+    app = MyExport()
+    app.run()
+
+
+if __name__ == "__main__":
+    sly.main_wrapper("main", main)
