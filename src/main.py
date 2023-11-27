@@ -97,9 +97,16 @@ def process_images(api, project_meta, ds, class_names, progress, dir_names, skip
         img_names = [f"{ds.name}_{image_info.name}" for image_info in batch]
         ann_infos = api.annotation.download_batch(ds.id, img_ids)
 
-        for img_id, img_name, ann_info in zip(img_ids, img_names, ann_infos):
+        for img_id, img_name, ann_info, img_info in zip(img_ids, img_names, ann_infos, batch):
             ann_json = ann_info.annotation
-            ann = sly.Annotation.from_json(ann_json, project_meta)
+            img_info: sly.ImageInfo
+            try:
+                ann = sly.Annotation.from_json(ann_json, project_meta)
+            except Exception as e:
+                sly.logger.warn(
+                    f"Some problem with annotation for image {img_info.name} (ID: {img_info.id}). Skipped...: {repr(e)}"
+                )
+                ann = sly.Annotation(img_size=(img_info.height, img_info.width))
 
             yolov8_ann = []
             for label in ann.labels:
@@ -253,9 +260,8 @@ def main():
     try:
         app = MyExport()
         app.run()
-    except Exception as e:
+    finally:
         sly.fs.remove_dir(STORAGE_DIR)
-        raise e
 
 
 if __name__ == "__main__":
