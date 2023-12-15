@@ -292,7 +292,6 @@ def main():
     app = MyExport()
     try:
         app.run()
-        raise RuntimeError("Export finished successfully. But it should fail.")
     except Exception as e:
         exception_handler = handle_exception(e)
         if exception_handler:
