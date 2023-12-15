@@ -2,12 +2,12 @@ import os
 import supervisely as sly
 import yaml
 import time
+import traceback
 import numpy as np
 
 from dotenv import load_dotenv
 
-from supervisely import handle_exceptions
-
+from supervisely.io.exception_handlers import handle_exception
 
 if sly.is_development():
     load_dotenv("local.env")
@@ -16,7 +16,14 @@ if sly.is_development():
 
 TRAIN_TAG_NAME = "train"
 VAL_TAG_NAME = "val"
-STORAGE_DIR = sly.app.get_data_dir()
+
+ABSOLUTE_PATH = os.path.dirname(os.path.abspath(__file__))
+PARENT_DIR = os.path.dirname(ABSOLUTE_PATH)
+sly.logger.debug(f"Absolute path: {ABSOLUTE_PATH}, parent dir: {PARENT_DIR}")
+
+TEMP_DIR = os.path.join(PARENT_DIR, "temp")
+sly.fs.mkdir(TEMP_DIR, remove_content_if_exists=True)
+sly.logger.info(f"App starting... TEMP_DIR: {TEMP_DIR}")
 
 
 def prepare_trainval_dirs(result_dir):
@@ -167,7 +174,7 @@ def prepare_yaml(result_dir_name, result_dir, class_names, class_colors):
 
     config_path = os.path.join(result_dir, "data_config.yaml")
     with open(config_path, "w") as f:
-        data = yaml.dump(data_yaml, f, default_flow_style=None)
+        yaml.dump(data_yaml, f, default_flow_style=None)
 
 
 def download_batch_with_retry(api: sly.Api, dataset_id, image_ids, paths_to_save):
@@ -186,7 +193,7 @@ def download_batch_with_retry(api: sly.Api, dataset_id, image_ids, paths_to_save
         except Exception as e:
             curr_retry += 1
             if curr_retry <= retry_cnt:
-                time.sleep(2 ** curr_retry)
+                time.sleep(2**curr_retry)
                 sly.logger.warn(
                     f"Failed to download images, retry {curr_retry} of {retry_cnt}... Error: {e}"
                 )
@@ -209,7 +216,7 @@ class MyExport(sly.app.Export):
         for ds in datasets:
             images_count += ds.images_count
         result_dir_name = f"{project.id}_{project.name}"
-        result_dir = os.path.join(STORAGE_DIR, result_dir_name)
+        result_dir = os.path.join(TEMP_DIR, result_dir_name)
         sly.fs.mkdir(result_dir)
 
         dir_names = prepare_trainval_dirs(result_dir)
@@ -281,15 +288,30 @@ class MyExport(sly.app.Export):
         return result_dir
 
 
-@handle_exceptions
 def main():
+    app = MyExport()
     try:
-        app = MyExport()
         app.run()
+        raise RuntimeError("Export finished successfully. But it should fail.")
+    except Exception as e:
+        exception_handler = handle_exception(e)
+        if exception_handler:
+            exception_handler.log_error_for_agent("main")
+        else:
+            sly.logger.error(
+                traceback.format_exc(),
+                exc_info=True,
+                extra={
+                    "main_name": "main",
+                    "exc_str": repr(e),
+                    "event_type": sly.EventType.TASK_CRASHED,
+                },
+            )
     finally:
         if not sly.is_development():
-            sly.fs.remove_dir(STORAGE_DIR)
+            sly.logger.info(f"Remove temp directory: {TEMP_DIR}")
+            sly.fs.remove_dir(TEMP_DIR)
 
 
 if __name__ == "__main__":
-    sly.main_wrapper("main", main)
+    main()
