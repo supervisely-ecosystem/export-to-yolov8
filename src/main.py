@@ -2,7 +2,6 @@ import os
 import supervisely as sly
 import yaml
 import time
-import traceback
 import numpy as np
 
 from dotenv import load_dotenv
@@ -295,17 +294,9 @@ def main():
     except Exception as e:
         exception_handler = handle_exception(e)
         if exception_handler:
-            exception_handler.log_error_for_agent("main")
+            raise Exception(exception_handler.get_message_for_modal_window()) from e
         else:
-            sly.logger.error(
-                traceback.format_exc(),
-                exc_info=True,
-                extra={
-                    "main_name": "main",
-                    "exc_str": repr(e),
-                    "event_type": sly.EventType.TASK_CRASHED,
-                },
-            )
+            raise e
     finally:
         if not sly.is_development():
             sly.logger.info(f"Remove temp directory: {TEMP_DIR}")
@@ -313,4 +304,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    sly.main_wrapper("main", main)
