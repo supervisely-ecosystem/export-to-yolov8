@@ -287,16 +287,11 @@ class MyExport(sly.app.Export):
         return result_dir
 
 
+@sly.handle_exceptions(has_ui=False)
 def main():
-    app = MyExport()
     try:
+        app = MyExport()
         app.run()
-    except Exception as e:
-        exception_handler = handle_exception(e)
-        if exception_handler:
-            raise Exception(exception_handler.get_message_for_modal_window()) from e
-        else:
-            raise e
     finally:
         if not sly.is_development():
             sly.logger.info(f"Remove temp directory: {TEMP_DIR}")
