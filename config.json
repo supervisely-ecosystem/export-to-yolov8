@@ -16,6 +16,6 @@
     "target": ["images_project", "images_dataset"],
     "context_root": "Download as"
   },
-  "docker_image": "supervisely/import-export:6.72.227",
+  "docker_image": "supervisely/import-export:6.73.48",
   "min_instance_version": "6.8.54"
 }

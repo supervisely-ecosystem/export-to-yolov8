@@ -2,6 +2,4 @@ __pycache__
 tmp/
 .venv/
 .DS_Store
-.vscode
-supervisely
 temp
