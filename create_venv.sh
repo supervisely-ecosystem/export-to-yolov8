@@ -13,7 +13,7 @@ echo "VENV will be created" && \
 python3 -m venv .venv && \
 source .venv/bin/activate && \
 
-echo "Install requirements..." && \
-pip3 install -r requirements.txt && \
+echo "Install dev_requirements..." && \
+pip3 install -r dev_requirements.txt && \
 echo "Requirements have been successfully installed" && \
 deactivate

@@ -1,27 +1,25 @@
 import os
+import time
+
+import numpy as np
 import supervisely as sly
 import yaml
-import time
-import numpy as np
-
 from dotenv import load_dotenv
-
-from supervisely.io.exception_handlers import handle_exception
 
 if sly.is_development():
     load_dotenv("local.env")
     load_dotenv(os.path.expanduser("~/supervisely.env"))
 
-
+# region constants
 TRAIN_TAG_NAME = "train"
 VAL_TAG_NAME = "val"
-
 ABSOLUTE_PATH = os.path.dirname(os.path.abspath(__file__))
 PARENT_DIR = os.path.dirname(ABSOLUTE_PATH)
-sly.logger.debug(f"Absolute path: {ABSOLUTE_PATH}, parent dir: {PARENT_DIR}")
-
 TEMP_DIR = os.path.join(PARENT_DIR, "temp")
+# endregion
 sly.fs.mkdir(TEMP_DIR, remove_content_if_exists=True)
+
+sly.logger.debug(f"Absolute path: {ABSOLUTE_PATH}, parent dir: {PARENT_DIR}")
 sly.logger.info(f"App starting... TEMP_DIR: {TEMP_DIR}")
 
 
@@ -129,24 +127,30 @@ def process_images(api, project_meta, ds, class_names, progress, dir_names, skip
 
             image_processed = False
 
+            unique_image_name = f"{ds.id}_{img_info.name}"
+
             if ann.img_tags.get(VAL_TAG_NAME) is not None:
                 val_ids.append(img_id)
-                ann_path = os.path.join(val_labels_dir, f"{sly.fs.get_file_name(img_name)}.txt")
+                ann_path = os.path.join(
+                    val_labels_dir, f"{sly.fs.get_file_name(unique_image_name)}.txt"
+                )
                 val_anns.append(ann_path)
 
                 _write_new_ann(ann_path, yolov8_ann)
-                img_path = os.path.join(val_images_dir, img_name)
+                img_path = os.path.join(val_images_dir, unique_image_name)
                 val_image_paths.append(img_path)
                 image_processed = True
                 val_count += 1
 
             if not image_processed or ann.img_tags.get(TRAIN_TAG_NAME) is not None:
                 train_ids.append(img_id)
-                ann_path = os.path.join(train_labels_dir, f"{sly.fs.get_file_name(img_name)}.txt")
+                ann_path = os.path.join(
+                    train_labels_dir, f"{sly.fs.get_file_name(unique_image_name)}.txt"
+                )
                 train_anns.append(ann_path)
 
                 _write_new_ann(ann_path, yolov8_ann)
-                img_path = os.path.join(train_imgs_dir, img_name)
+                img_path = os.path.join(train_imgs_dir, unique_image_name)
                 train_img_paths.append(img_path)
                 image_processed = True
                 train_count += 1
@@ -209,7 +213,7 @@ class MyExport(sly.app.Export):
         if context.dataset_id is not None:
             datasets = [api.dataset.get_info_by_id(context.dataset_id)]
         else:
-            datasets = api.dataset.get_list(project.id)
+            datasets = api.dataset.get_list(project.id, recursive=True)
 
         images_count = 0
         for ds in datasets:
