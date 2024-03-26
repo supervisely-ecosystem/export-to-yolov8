@@ -6,16 +6,22 @@
   "icon_cover": true,
   "poster": "https://user-images.githubusercontent.com/115161827/235631478-31056b4a-4945-4962-aef0-4bd5b7b73956.png",
   "description": "Transform Supervisely format to YOLOv8 format",
-  "categories": ["images", "export"],
+  "categories": [
+    "images",
+    "export"
+  ],
   "main_script": "src/main.py",
   "modal_template": "src/modal.html",
   "task_location": "workspace_tasks",
   "isolate": true,
   "headless": true,
   "context_menu": {
-    "target": ["images_project", "images_dataset"],
+    "target": [
+      "images_project",
+      "images_dataset"
+    ],
     "context_root": "Download as"
   },
-  "docker_image": "supervisely/import-export:6.73.48",
-  "min_instance_version": "6.8.54"
+  "docker_image": "supervisely/import-export:6.73.59",
+  "min_instance_version": "6.9.4"
 }
