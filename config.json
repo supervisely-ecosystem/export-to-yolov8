@@ -22,6 +22,6 @@
     ],
     "context_root": "Download as"
   },
-  "docker_image": "supervisely/import-export:6.73.60",
-  "min_instance_version": "6.9.4"
+  "docker_image": "supervisely/import-export:6.73.93",
+  "min_instance_version": "6.9.22"
 }
