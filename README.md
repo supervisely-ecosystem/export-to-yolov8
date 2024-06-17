@@ -60,6 +60,7 @@ Learn more about Yolov8 segmentation format [here](https://docs.ultralytics.com/
 **Detection**:
 
 - To convert Supervisely project to YOLOv8 format for object detection tasks, you can use the [Convert Supervisely to YOLO v5 format ](https://ecosystem.supervise.ly/apps/convert-supervisely-to-yolov5-format) app.
+    
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/convert-supervisely-to-yolov5-format" src="https://github.com/supervisely-ecosystem/export-to-yolov8/releases/download/untagged-6331ae231a8468233aab/yolo_det.jpg" height="70px" margin-bottom="20px"/>
 
 Learn more about Yolov8 segmentation format [here](https://docs.ultralytics.com/datasets/detect/).
