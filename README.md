@@ -1,7 +1,7 @@
 <div align="center" markdown>
 <img src="https://user-images.githubusercontent.com/115161827/235631478-31056b4a-4945-4962-aef0-4bd5b7b73956.png"/>
 
-# Export to YOLOv8 segmentation format
+# Export to YOLOv8 format for instance segmentation and pose estimation tasks
 
 <p align="center">
   <a href="#Overview">Overview</a> •
@@ -21,15 +21,24 @@
 
 # Overview
 
-This application is designed specifically for instance segmentation tasks. 
+This application is designed specifically for instance segmentation and pose estimation tasks.
 
-It transforms datasets from the [Supervisely format](https://docs.supervise.ly/data-organization/00_ann_format_navi) to the **YOLOv8 segmentation format**. 
+It transforms datasets from the [Supervisely format](https://docs.supervise.ly/data-organization/00_ann_format_navi) to the YOLOv8 **segmentation format** or **pose estimation format**. 
 By using this application, you can effortlessly convert your dataset and download as `tar` archive.
 
-Label Format:
+**Changelog**:
+
+🏃 
+`v1.0.0` -  Starting from this version application supports export to YOLOv8 format for pose estimation tasks (keypoints).
+
+# Labels Format
+
+The YOLOv8 format is a text-based format that is used to represent object detection, instance segmentation, and pose estimation datasets.
 
 - Each image in the dataset has a corresponding text file with the same name as the image file and the `.txt` extension in the `labels` folder. 
 - Each object is represented by a separate line in the file, containing the `class-index` and the coordinates of the bounding mask, normalized to the range of 0 to 1 (relative to the image dimensions). 
+
+**- Segmentation format:**
 
 The format for a single row in the **segmentation** dataset output files is as follows:
 
@@ -48,11 +57,33 @@ Here is an example of the YOLO instance segmentation dataset format for a single
 
 Learn more about Yolov8 segmentation format [here](https://docs.ultralytics.com/datasets/segment/).
 
+**- Pose estimation format:**
+
+The format for a single row in the **pose estimation** dataset output files is as follows:
+
+
+Format with Dim = 2
+
+```txt
+<class-index> <x> <y> <width> <height> <px1> <py1> <px2> <py2> ... <pxn> <pyn>
+```
+
+Format with Dim = 3
+
+```txt
+<class-index> <x> <y> <width> <height> <px1> <py1> <p1-visibility> <px2> <py2> <p2-visibility> <pxn> <pyn> <p2-visibility>
+```
+
+In this format, <class-index> is the index of the class for the object,<x> <y> <width> <height> are coordinates of bounding box, and <px1> <py1> <px2> <py2> ... <pxn> <pyn> are the pixel coordinates of the keypoints. The coordinates are separated by spaces.
+
+Learn more about Yolov8 pose estimation format [here](https://docs.ultralytics.com/datasets/pose/).
+
 # Preparation
 
-Supervisely project has to contain only classes with shape `Polygon` or/and `Bitmap`. If your project has classes with other shapes, labels with other types of shapes will be skipped. We recommend you to use `Convert Class Shape` app to convert class shapes.
+Supervisely project has to contain only classes with shape `Polygon`, `Bitmap`, `AlphaMask` for segmentation tasks or `Graph` for pose estimation tasks. 
+If your project has classes with other shapes, labels with other types of shapes will be skipped. We recommend you to use `Convert Class Shape` app to convert class shapes (supported for segmentation tasks only).
 
-- [Convert Class Shape](https://ecosystem.supervise.ly/apps/convert-class-shape) - app allows to convert labels to different class shapes.  
+- The [Convert Class Shape](https://ecosystem.supervise.ly/apps/convert-class-shape) app allows to convert labels to different class shapes.  
     
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/convert-class-shape" src="https://user-images.githubusercontent.com/115161827/235643553-d5dd001e-22ef-4e74-a303-b7cfd251b7fd.png" height="70px" margin-bottom="20px"/>
 
@@ -99,6 +130,9 @@ colors: [[255,1,1], [1,255,1]]  # class colors
 nc: 2                           # number of classes
 train: ../lemons/images/train   # path to train imgs
 val: ../lemons/images/val       # path to val imgs
+
+# Keypoints (for pose estimation tasks)
+kpt_shape: [17, 3]  # number of keypoints, number of dims (2 for x,y or 3 for x,y,visible)
 ```
 
 # Related apps
