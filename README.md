@@ -29,7 +29,7 @@ By using this application, you can effortlessly convert your dataset and downloa
 **Changelog**:
 
 🏃 
-`v1.0.0` -  Starting from this version application supports export to YOLOv8 format for pose estimation tasks (keypoints).
+`v1.0.0` -  Starting from this version application supports exporting keypoints (`graph` geometry) to YOLOv8 format for pose estimation tasks.
 
 # Labels Format
 
@@ -38,7 +38,7 @@ The YOLOv8 format is a text-based format that is used to represent object detect
 - Each image in the dataset has a corresponding text file with the same name as the image file and the `.txt` extension in the `labels` folder. 
 - Each object is represented by a separate line in the file, containing the `class-index` and the coordinates of the bounding mask, normalized to the range of 0 to 1 (relative to the image dimensions). 
 
-**- Segmentation format:**
+**Segmentation**:
 
 The format for a single row in the **segmentation** dataset output files is as follows:
 
@@ -57,7 +57,14 @@ Here is an example of the YOLO instance segmentation dataset format for a single
 
 Learn more about Yolov8 segmentation format [here](https://docs.ultralytics.com/datasets/segment/).
 
-**- Pose estimation format:**
+**Detection**:
+
+- To convert Supervisely project to YOLOv8 format for object detection tasks, you can use the [Convert Supervisely to YOLO v5 format ](https://ecosystem.supervise.ly/apps/convert-supervisely-to-yolov5-format) app.
+    <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/convert-supervisely-to-yolov5-format" src="https://github.com/supervisely-ecosystem/export-to-yolov8/releases/download/untagged-6331ae231a8468233aab/yolo_det.jpg" height="70px" margin-bottom="20px"/>
+
+Learn more about Yolov8 segmentation format [here](https://docs.ultralytics.com/datasets/detect/).
+
+**Pose**:
 
 The format for a single row in the **pose estimation** dataset output files is as follows:
 
