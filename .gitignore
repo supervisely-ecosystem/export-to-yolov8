@@ -3,3 +3,4 @@ tmp/
 .venv/
 .DS_Store
 temp
+supervisely

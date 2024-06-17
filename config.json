@@ -12,6 +12,10 @@
   ],
   "main_script": "src/main.py",
   "modal_template": "src/modal.html",
+  "modal_template_state": {
+    "taskType": "segmentation",
+    "includeVisibility": true
+  },
   "task_location": "workspace_tasks",
   "isolate": true,
   "headless": true,
@@ -22,6 +26,6 @@
     ],
     "context_root": "Download as"
   },
-  "docker_image": "supervisely/import-export:6.73.93",
+  "docker_image": "supervisely/import-export:6.73.106",
   "min_instance_version": "6.9.22"
 }
