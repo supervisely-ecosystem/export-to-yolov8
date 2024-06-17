@@ -12,6 +12,11 @@
   ],
   "main_script": "src/main.py",
   "modal_template": "src/modal.html",
+  "modal_width": 700,
+  "modal_template_state": {
+    "taskType": "segmentation",
+    "includeVisibility": true
+  },
   "task_location": "workspace_tasks",
   "isolate": true,
   "headless": true,

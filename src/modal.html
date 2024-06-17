@@ -1,16 +1,43 @@
 <div>
-  <sly-notification-2 class="mt10" :options="{'type': 'warning'}">
-  <span slot="title">
-    Warning
-  </span>
-  <div>
-    Only Polygon and Bitmap shapes are supported. 
-  </div>
-</sly-notification-2>
-<div class="mt10 mb10 ml10" style="color: #737272">
-  <span>
-    Labels with other types of shapes will be <strong>skipped</strong>.
-    <br>We recommend you to use <a href="https://ecosystem.supervise.ly/apps/convert-class-shape">Convert Class Shape app</a> to convert class shapes.
-  </span>
+  <sly-notification-2 class="mb10" :options="{'type': 'info'}">
+    <div>
+      This application supports Segmentation masks and KeyPoints.
+       To export data for Object Detection tasks, please use <a href="https://ecosystem.supervise.ly/apps/convert-supervisely-to-yolov5-format">Convert Supervisely to YOLO v5 format</a> app.
+    </div>
+  </sly-notification-2>
+  <sly-field
+    title="Select task type"
+    description="Select the type of task to export the data for"
+  >
+    <div>
+      <el-radio-group v-model="state.taskType" size="normal">
+        <div>
+          <el-radio label="segmentation">
+            <span>Export segmentation masks (instance segmentation task)</span>
+          </el-radio>
+        </div>
+        <div>
+          <el-radio label="pose"><span>Export keypoints (pose estimation task)</span></el-radio>
+        </div>
+      </el-radio-group>
+    </div>
+  </sly-field>
+  <div v-if="state.taskType == 'segmentation'">
+    <el-checkbox v-if="state.taskType == 'pose'" v-model="state.includeVisibility">Add visibility flag</el-checkbox>
+    <sly-notification-2 class="mt10" :options="{'type': 'warning'}">
+    <span slot="title">
+        Warning
+    </span>
+    <div>
+        Only Polygon, Bitmap and AlphaMask shapes are supported. 
+        AlphaMask shapes will be converted to Bitmap.
+    </div>
+    </sly-notification-2>
+    <div class="mt10 mb10 ml10" style="color: #737272">
+    <span>
+        Labels with other types of shapes will be <strong>skipped</strong>.
+        <br>We recommend you to use <a href="https://ecosystem.supervise.ly/apps/convert-class-shape">Convert Class Shape app</a> to convert class shapes.
+    </span>
+    </div>
   </div>
 </div>
