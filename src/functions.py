@@ -81,7 +81,9 @@ def transform_keypoint_label(class_names, img_size, label: sly.Label, max_kpts_c
             line.append(2 if not node.disabled else 1)
     if len(label.geometry.nodes) < max_kpts_count:
         for _ in range(max_kpts_count - len(label.geometry.nodes)):
-            line.extend([0, 0, 0])
+            line.extend([0, 0])
+            if g.INCLUDE_VISIBILTY_FLAG:
+                line.append(0)
 
     return " ".join([str(x) for x in line])
 
