@@ -22,8 +22,10 @@
       </el-radio-group>
     </div>
   </sly-field>
+  <div v-if="state.taskType == 'pose'">
+    <el-checkbox v-model="state.includeVisibility">Add visibility flag</el-checkbox>
+  </div>
   <div v-if="state.taskType == 'segmentation'">
-    <el-checkbox v-if="state.taskType == 'pose'" v-model="state.includeVisibility">Add visibility flag</el-checkbox>
     <sly-notification-2 class="mt10" :options="{'type': 'warning'}">
     <span slot="title">
         Warning
