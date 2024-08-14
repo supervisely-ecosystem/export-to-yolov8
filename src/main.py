@@ -2,11 +2,12 @@ import os
 
 import supervisely as sly
 
-import src.globals as g
 import src.functions as f
+import src.globals as g
 import src.workflow as w
 
 api = None
+
 
 class MyExport(sly.app.Export):
     def process(self, context: sly.app.Export.Context):
@@ -52,9 +53,13 @@ class MyExport(sly.app.Export):
         progress = sly.Progress("Transformation ...", images_count)
         for ds in datasets:
             train_info, val_info = f.process_images(
-                api, meta, ds,
-                class_names, progress,
-                dir_names, skipped,
+                api,
+                meta,
+                ds,
+                class_names,
+                progress,
+                dir_names,
+                skipped,
                 max_kpts_count,
             )
             train_ids, train_img_paths, train_anns = train_info

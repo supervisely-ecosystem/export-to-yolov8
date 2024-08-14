@@ -12,7 +12,6 @@ def workflow_input(api: sly.Api, project_id: int):
 
 def workflow_output(api: sly.Api, file: Union[int, sly.api.file_api.FileInfo]):
     try:
-        api.file.get
         if isinstance(file, int):
             file = api.file.get_info_by_id(file)
         relation_settings = sly.WorkflowSettings(
