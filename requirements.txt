@@ -1,2 +1,0 @@
-# supervisely==6.73.156
-git+https://github.com/supervisely/supervisely.git@update-export-template
