@@ -2,12 +2,16 @@ import os
 
 import supervisely as sly
 
-import src.globals as g
 import src.functions as f
+import src.globals as g
+import src.workflow as w
+
+api = None
 
 
 class MyExport(sly.app.Export):
     def process(self, context: sly.app.Export.Context):
+        global api
         api = sly.Api.from_env()
 
         project = api.project.get_info_by_id(id=context.project_id)
@@ -15,6 +19,8 @@ class MyExport(sly.app.Export):
             datasets = [api.dataset.get_info_by_id(context.dataset_id)]
         else:
             datasets = api.dataset.get_list(project.id, recursive=True)
+
+        w.workflow_input(api, project.id)
 
         images_count = 0
         for ds in datasets:
@@ -47,9 +53,13 @@ class MyExport(sly.app.Export):
         progress = sly.Progress("Transformation ...", images_count)
         for ds in datasets:
             train_info, val_info = f.process_images(
-                api, meta, ds,
-                class_names, progress,
-                dir_names, skipped,
+                api,
+                meta,
+                ds,
+                class_names,
+                progress,
+                dir_names,
+                skipped,
                 max_kpts_count,
             )
             train_ids, train_img_paths, train_anns = train_info
@@ -106,6 +116,7 @@ def main():
     try:
         app = MyExport()
         app.run()
+        w.workflow_output(api, app.output_file)
     finally:
         if not sly.is_development():
             sly.logger.info(f"Remove temp directory: {g.TEMP_DIR}")
