@@ -40,7 +40,10 @@ class MyExport(sly.app.Export):
 
         for obj_class in meta.obj_classes:
             if issubclass(obj_class.geometry_type, sly.GraphNodes):
-                max_kpts_count = max(max_kpts_count, len(obj_class.geometry_config["nodes"]))
+                max_kpts_count = max(
+                    max_kpts_count,
+                    len(obj_class.geometry_config[obj_class.geometry_type.items_json_field]),
+                )
 
         f.check_tagmetas(meta)
 
