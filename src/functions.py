@@ -141,7 +141,7 @@ def process_images(
                     if yolov8_line is not None:
                         yolov8_ann.append(yolov8_line)
                 except Exception as e:
-                    sly.logger.info(f"Label skipped: {e}")
+                    sly.logger.debug(f"Label skipped: {e}")
                     skipped_classes.append(
                         (label.obj_class.name, label.geometry.geometry_name(), img_name)
                     )
