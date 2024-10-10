@@ -27,5 +27,5 @@
     "context_root": "Download as"
   },
   "docker_image": "supervisely/import-export:6.73.209",
-  "instance_version": "6.11.16"
+  "instance_version": "6.11.19"
 }
