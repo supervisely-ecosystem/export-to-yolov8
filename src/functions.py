@@ -2,6 +2,7 @@ import numpy as np
 import os
 import yaml
 import supervisely as sly
+import asyncio
 
 import src.globals as g
 
@@ -89,7 +90,7 @@ def transform_keypoint_label(class_names, img_size, label: sly.Label, max_kpts_c
 
 
 def process_images(
-    api,
+    api: sly.Api,
     project_meta,
     ds,
     class_names,
@@ -107,7 +108,6 @@ def process_images(
     train_count = 0
     val_count = 0
 
-
     train_labels_dir, train_imgs_dir, val_images_dir, val_labels_dir = dir_names
 
     def _write_new_ann(path, content):
@@ -118,7 +118,15 @@ def process_images(
     for batch in sly.batched(images_infos):
         img_ids = [image_info.id for image_info in batch]
         img_names = [f"{ds.name}_{image_info.name}" for image_info in batch]
-        ann_infos = api.annotation.download_batch(ds.id, img_ids)
+        ann_infos = []
+        with g.Timer("Annotation downloading", len(batch)):
+            coro = api.annotation.download_batch_async(ds.id, img_ids)
+            loop = sly.utils.get_or_create_event_loop()
+            if loop.is_running():
+                future = asyncio.run_coroutine_threadsafe(coro, loop)
+                ann_infos.extend(future.result())
+            else:
+                ann_infos.extend(loop.run_until_complete(coro))
 
         for img_id, img_name, ann_info, img_info in zip(img_ids, img_names, ann_infos, batch):
             ann_json = ann_info.annotation
