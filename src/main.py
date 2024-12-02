@@ -7,7 +7,6 @@ import src.globals as g
 import src.workflow as w
 
 import asyncio
-from tinytimer import Timer
 
 api = None
 
@@ -90,39 +89,18 @@ class MyExport(sly.app.Export):
 
         download_progress = sly.Progress("Downloading images ...", total_images_count)
         for ds in datasets:
-            ids = all_ids[ds.id]["train_ids"] + all_ids[ds.id]["val_ids"]
-            paths = all_paths[ds.id]["train_paths"] + all_paths[ds.id]["val_paths"]
-            with Timer() as t:
-                coro = api.image.download_paths_async(
-                    ids, paths, semaphore, progress_cb=download_progress.iters_done_report
-                )
-                loop = sly.utils.get_or_create_event_loop()
-                if loop.is_running():
-                    future = asyncio.run_coroutine_threadsafe(coro, loop)
-                    future.result()
-                else:
-                    loop.run_until_complete(coro)
-            sly.logger.info(
-                f"Downloading time: {t.elapsed:.4f} seconds per {len(ids)} images  ({t.elapsed/len(ids):.4f} seconds per image)"
-            )
-
-            # with Timer() as t:
-            #     total_ids_cnt = len(all_ids[ds.id]["train_ids"] + all_ids[ds.id]["val_ids"])
-            #     for train_batch in sly.batched(
-            #         list(zip(all_ids[ds.id]["train_ids"], all_paths[ds.id]["train_paths"]))
-            #     ):
-            #         img_ids, img_paths = zip(*train_batch)
-            #         api.image.download_paths(ds.id, img_ids, img_paths)
-            #         download_progress.iters_done_report(len(train_batch))
-            #     for val_batch in sly.batched(
-            #         list(zip(all_ids[ds.id]["val_ids"], all_paths[ds.id]["val_paths"]))
-            #     ):
-            #         img_ids, img_paths = zip(*val_batch)
-            #         api.image.download_paths(ds.id, img_ids, img_paths)
-            #         download_progress.iters_done_report(len(val_batch))
-            # sly.logger.info(
-            #     f"Downloading time: {t.elapsed:.4f} seconds per {total_ids_cnt} images  ({t.elapsed/total_ids_cnt:.4f} seconds per image)"
-            # )
+            for train_batch in sly.batched(
+                list(zip(all_ids[ds.id]["train_ids"], all_paths[ds.id]["train_paths"]))
+            ):
+                img_ids, img_paths = zip(*train_batch)
+                api.image.download_paths(ds.id, img_ids, img_paths)
+                download_progress.iters_done_report(len(train_batch))
+            for val_batch in sly.batched(
+                list(zip(all_ids[ds.id]["val_ids"], all_paths[ds.id]["val_paths"]))
+            ):
+                img_ids, img_paths = zip(*val_batch)
+                api.image.download_paths(ds.id, img_ids, img_paths)
+                download_progress.iters_done_report(len(val_batch))
 
         f.prepare_yaml(result_dir_name, result_dir, class_names, class_colors, max_kpts_count)
 
