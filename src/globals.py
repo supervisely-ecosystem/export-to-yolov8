@@ -4,6 +4,8 @@ import supervisely as sly
 from distutils.util import strtobool
 from dotenv import load_dotenv
 
+import time
+
 if sly.is_development():
     load_dotenv("local.env")
     load_dotenv(os.path.expanduser("~/supervisely.env"))
@@ -27,3 +29,25 @@ include_visibility = bool(strtobool(os.environ.get("modal.state.includeVisibilit
 IS_SEGM_TASK = task_type == "segmentation"
 IS_POSE_EST_TASK = task_type == "pose"
 INCLUDE_VISIBILTY_FLAG = IS_POSE_EST_TASK and include_visibility
+
+
+class Timer:
+
+    def __init__(self, message=None, items_cnt=None):
+        self.message = message
+        self.items_cnt = items_cnt
+        self.elapsed = 0
+
+    def __enter__(self):
+        self.start = time.perf_counter()
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.end = time.perf_counter()
+        self.elapsed = self.end - self.start
+        msg = self.message or "Block execution"
+        if self.items_cnt is not None:
+            log_msg = f"{msg} time: {self.elapsed:.3f} seconds per {self.items_cnt} items  ({self.elapsed/self.items_cnt:.3f} seconds per item)"
+        else:
+            log_msg = f"{msg} time: {self.elapsed:.3f} seconds"
+        sly.logger.info(log_msg)
