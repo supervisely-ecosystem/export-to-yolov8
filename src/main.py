@@ -54,7 +54,7 @@ class MyExport(sly.app.Export):
         total_images_count = 0
         skipped = []
 
-        progress = sly.Progress("Transforming annotations...", images_count)
+        progress = sly.tqdm_sly(desc="Transforming annotations...", total=images_count)
         for ds in datasets:
             train_info, val_info = f.process_images(
                 api,
@@ -81,7 +81,7 @@ class MyExport(sly.app.Export):
             total_images_count += len(train_img_paths)
             total_images_count += len(val_image_paths)
 
-        download_progress = sly.Progress("Downloading images...", total_images_count)
+        download_progress = sly.tqdm_sly(desc="Downloading images...", total=total_images_count)
         img_ids = []
         img_paths = []
         for ds in datasets:
@@ -91,7 +91,7 @@ class MyExport(sly.app.Export):
             img_paths.extend(all_paths[ds.id]["val_paths"])
 
         coro = api.image.download_paths_async(
-            img_ids, img_paths, progress_cb=download_progress.iters_done_report
+            img_ids, img_paths, progress_cb=download_progress
         )
         loop = sly.utils.get_or_create_event_loop()
         if loop.is_running():

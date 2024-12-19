@@ -121,7 +121,8 @@ def process_images(
     img_names = [f"{ds.name}_{image_info.name}" for image_info in images_infos]
     ann_infos = []
 
-    coro = api.annotation.download_bulk_async(ds.id, img_ids)
+    ann_progress = sly.tqdm_sly(desc="Downloading annotations...", total=len(img_ids))
+    coro = api.annotation.download_bulk_async(ds.id, img_ids, progress_cb=ann_progress)
     loop = sly.utils.get_or_create_event_loop()
     if loop.is_running():
         future = asyncio.run_coroutine_threadsafe(coro, loop)
@@ -187,7 +188,7 @@ def process_images(
             image_processed = True
             train_count += 1
 
-        progress.iter_done_report()
+        progress(1)
 
     sly.logger.info(
         f"DATASET '{ds.name}': {train_count} images for train, {val_count} images for validation"
