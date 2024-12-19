@@ -1,7 +1,7 @@
 import os
+from distutils.util import strtobool
 
 import supervisely as sly
-from distutils.util import strtobool
 from dotenv import load_dotenv
 
 if sly.is_development():
