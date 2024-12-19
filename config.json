@@ -1,31 +1,25 @@
 {
-  "name": "Export to YOLOv8 format",
-  "type": "app",
-  "version": "2.0.0",
-  "icon": "https://user-images.githubusercontent.com/115161827/235631477-3c5c5364-3818-4bd7-ba72-341712ddde28.jpg",
-  "icon_cover": true,
-  "poster": "https://user-images.githubusercontent.com/115161827/235631478-31056b4a-4945-4962-aef0-4bd5b7b73956.png",
-  "description": "Transform Supervisely format to YOLOv8 format",
-  "categories": [
-    "images",
-    "export"
-  ],
-  "main_script": "src/main.py",
-  "modal_template": "src/modal.html",
-  "modal_template_state": {
-    "taskType": "segmentation",
-    "includeVisibility": true
-  },
-  "task_location": "workspace_tasks",
-  "isolate": true,
-  "headless": true,
-  "context_menu": {
-    "target": [
-      "images_project",
-      "images_dataset"
-    ],
-    "context_root": "Download as"
-  },
-  "docker_image": "supervisely/import-export:6.73.242",
-  "instance_version": "6.12.5"
+	"name": "Export to YOLOv8 format",
+	"type": "app",
+	"version": "2.0.0",
+	"icon": "https://user-images.githubusercontent.com/115161827/235631477-3c5c5364-3818-4bd7-ba72-341712ddde28.jpg",
+	"icon_cover": true,
+	"poster": "https://user-images.githubusercontent.com/115161827/235631478-31056b4a-4945-4962-aef0-4bd5b7b73956.png",
+	"description": "Transform Supervisely format to YOLOv8 format",
+	"categories": ["images", "export"],
+	"main_script": "src/main.py",
+	"modal_template": "src/modal.html",
+	"modal_template_state": {
+		"taskType": "segmentation",
+		"includeVisibility": true
+	},
+	"task_location": "workspace_tasks",
+	"isolate": true,
+	"headless": true,
+	"context_menu": {
+		"target": ["images_project", "images_dataset"],
+		"context_root": "Download as"
+	},
+	"docker_image": "supervisely/import-export:6.73.259",
+	"instance_version": "6.12.12"
 }
