@@ -121,7 +121,7 @@ def process_images(
     img_names = [f"{ds.name}_{image_info.name}" for image_info in images_infos]
     ann_infos = []
 
-    ann_progress = sly.tqdm_sly(desc="Downloading annotations...", total=len(img_ids))
+    ann_progress = sly.tqdm_sly(desc="Downloading annotations", total=len(img_ids))
     coro = api.annotation.download_bulk_async(ds.id, img_ids, progress_cb=ann_progress)
     loop = sly.utils.get_or_create_event_loop()
     if loop.is_running():
