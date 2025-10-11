@@ -145,8 +145,8 @@ kpt_shape: [17, 3]  # number of keypoints, number of dims (2 for x,y or 3 for x,
 
 # Related apps
 
-- [Train YOLOv8](../../../../../supervisely-ecosystem/yolov8/train) - app allows to create custom YOLOv8 weights through training process.
+- [Train YOLOv8](https://ecosystem.supervisely.com/apps/supervisely-ecosystem/yolov8/train) - app allows to create custom YOLOv8 weights through training process.
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/yolov8/train" src="https://github.com/supervisely-ecosystem/yolov8/assets/115161827/82348f9a-38fc-4736-885c-d6786e37a218" height="70px" margin-bottom="20px"/>
 
-- [Serve YOLOv8](../../../../../supervisely-ecosystem/yolov8/serve) - app allows to deploy YOLOv8 model as REST API service.   
+- [Serve YOLOv8](https://ecosystem.supervisely.com/apps/yolov8/serve) - app allows to deploy YOLOv8 model as REST API service.   
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/yolov8/serve" src="https://github.com/supervisely-ecosystem/yolov8/assets/115161827/721f5344-013c-4466-bc05-88cc3efef5ca" height="70px" margin-bottom="20px"/>
