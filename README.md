@@ -11,7 +11,7 @@
   <a href="#Related-apps">Related apps</a>
 </p>
   
-[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](../../../../supervisely-ecosystem/export-to-yolov8)
+[![](https://img.shields.io/badge/supervisely-ecosystem-brightgreen)](https://ecosystem.supervisely.com/apps/supervisely-ecosystem/export-to-yolov8)
 [![](https://img.shields.io/badge/slack-chat-green.svg?logo=slack)](https://supervisely.com/slack)
 ![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/supervisely-ecosystem/export-to-yolov8)
 [![views](https://app.supervisely.com/img/badges/views/supervisely-ecosystem/export-to-yolov8.png)](https://supervisely.com)
@@ -59,7 +59,7 @@ Learn more about Yolov8 segmentation format [here](https://docs.ultralytics.com/
 
 **Detection**:
 
-- To convert Supervisely project to YOLOv8 format for object detection tasks, you can use the [Convert Supervisely to YOLO v5 format ](../../../../supervisely-ecosystem/convert-supervisely-to-yolov5-format) app.
+- To convert Supervisely project to YOLOv8 format for object detection tasks, you can use the [Convert Supervisely to YOLO v5 format ](https://ecosystem.supervisely.com/apps/convert-supervisely-to-yolov5-format) app.
     
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/convert-supervisely-to-yolov5-format" src="https://github.com/supervisely-ecosystem/export-to-yolov8/releases/download/untagged-6331ae231a8468233aab/yolo_det.jpg" height="70px" margin-bottom="20px"/>
 
@@ -91,18 +91,18 @@ Learn more about Yolov8 pose estimation format [here](https://docs.ultralytics.c
 Supervisely project has to contain only classes with shape `Polygon`, `Bitmap`, `AlphaMask` for segmentation tasks or `Graph` for pose estimation tasks. 
 If your project has classes with other shapes, labels with other types of shapes will be skipped. We recommend you to use `Convert Class Shape` app to convert class shapes (supported for segmentation tasks only).
 
-- The [Convert Class Shape](../../../../supervisely-ecosystem/convert-class-shape) app allows to convert labels to different class shapes.  
+- The [Convert Class Shape](https://ecosystem.supervisely.com/apps/convert-class-shape) app allows to convert labels to different class shapes.  
     
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/convert-class-shape" src="https://user-images.githubusercontent.com/115161827/235643553-d5dd001e-22ef-4e74-a303-b7cfd251b7fd.png" height="70px" margin-bottom="20px"/>
 
 In addition, YOLOv8 format implies the presence of train/val datasets. Thus, to split images on training and validation datasets you should assign  corresponding tags (`train` or `val`) to images. If image doesn't have such tags, it will be treated as `train`. We recommend to use app `Assign train/val tags to images`. 
 
-- [Assign train/val tags to images](../../../../supervisely-ecosystem/tag-train-val-test) - app allows to assign train/val tags to images.  
+- [Assign train/val tags to images](https://ecosystem.supervisely.com/apps/tag-train-val-test) - app allows to assign train/val tags to images.  
     
     <img data-key="sly-module-link" data-module-slug="supervisely-ecosystem/tag-train-val-test" src="https://user-images.githubusercontent.com/115161827/235643549-d0f4ea23-c75e-46f2-8767-3d786eb79207.png" height="70px" margin-bottom="20px"/>
     
 # How to Run 
-1. Add app to your team from [Ecosystem](../../../../supervisely-ecosystem/export-to-yolov8) if it is not there.
+1. Add app to your team from [Ecosystem](https://ecosystem.supervisely.com/apps/export-to-yolov8) if it is not there.
 
 2. Open context menu of project -> `Download as` -> `Export to YOLO v8 format` 
 <img src="https://user-images.githubusercontent.com/115161827/235641219-43f67765-99ff-4ece-803b-3cbbb07011c4.png" />
