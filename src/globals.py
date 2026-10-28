@@ -1,5 +1,4 @@
 import os
-from distutils.util import strtobool
 
 import supervisely as sly
 from dotenv import load_dotenv
@@ -22,7 +21,15 @@ sly.logger.debug(f"Absolute path: {ABSOLUTE_PATH}, parent dir: {PARENT_DIR}")
 sly.logger.info(f"App starting... TEMP_DIR: {TEMP_DIR}")
 
 task_type = os.environ.get("modal.state.taskType", "segmentation")
-include_visibility = bool(strtobool(os.environ.get("modal.state.includeVisibility", "false")))
+# distutils.util.strtobool is gone in Python 3.12+ (the image runs 3.14)
+include_visibility = os.environ.get("modal.state.includeVisibility", "false").strip().lower() in (
+    "1",
+    "y",
+    "yes",
+    "t",
+    "true",
+    "on",
+)
 
 IS_SEGM_TASK = task_type == "segmentation"
 IS_POSE_EST_TASK = task_type == "pose"
