@@ -28,3 +28,17 @@ def test_label_files_end_with_newline(run_export):
         text = f.read()
     assert text.endswith("\n") and text.count("\n") == 2
 
+
+def test_long_non_ascii_names_fit_the_file_system_limit(run_export):
+    # 255 bytes per file name on ext4/overlayfs in the app container
+    long_a = "изображение_" * 11 + "a.jpg"  # 137 chars, 258 bytes, + "10_" prefix
+    long_b = "изображение_" * 11 + "a.png"
+    images = {10: [(1, long_a, ann(poly([(10, 20), (10, 60), (50, 60)]))), (2, long_b, ann()), (3, "s.jpg", ann())]}
+    result_dir = run_export(FakeApi(META, [(10, "ds", None)], images))
+    imgs = list_images(result_dir, "train")
+    labels = read_labels(result_dir, "train")
+    assert len(imgs) == 3 and len(labels) == 3
+    assert all(len(n.encode()) <= 255 for n in imgs + list(labels))
+    assert sorted(n.rsplit(".", 1)[0] for n in imgs) == sorted(n[: -len(".txt")] for n in labels)
+    assert "10_s.jpg" in imgs
+    assert sum(len(lines) for lines in labels.values()) == 1

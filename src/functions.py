@@ -8,17 +8,27 @@ import yaml
 import src.globals as g
 
 
+MAX_NAME_BYTES = 255  # file name limit of ext4 and most other file systems
+
+
+def _cut_utf8(text: str, max_bytes: int) -> str:
+    return text.encode("utf-8")[:max_bytes].decode("utf-8", "ignore")
+
+
 def make_unique_name(name: str, used_stems: set) -> str:
     """Returns ``name`` with its stem made unique among ``used_stems`` (and records it).
 
     YOLO pairs ``images/<split>/<stem>.<ext>`` with ``labels/<split>/<stem>.txt``, so two images
-    that differ only in extension (``a.jpg``, ``a.png``) must not share a stem.
+    that differ only in extension (``a.jpg``, ``a.png``) must not share a stem. Long stems are cut
+    so that both file names fit in MAX_NAME_BYTES.
     """
     stem, ext = os.path.splitext(name)
-    candidate = stem
+    stem_limit = MAX_NAME_BYTES - max(len(ext.encode("utf-8")), len(".txt"))
+    candidate = _cut_utf8(stem, stem_limit)
     i = 1
     while candidate in used_stems:
-        candidate = f"{stem}_{i}"
+        suffix = f"_{i}"
+        candidate = _cut_utf8(stem, stem_limit - len(suffix)) + suffix
         i += 1
     used_stems.add(candidate)
     return candidate + ext
