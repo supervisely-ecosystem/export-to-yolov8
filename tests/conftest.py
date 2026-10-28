@@ -16,6 +16,11 @@ import supervisely as sly
 APP_MODULES = ("src.globals", "src.functions", "src.workflow", "src.main")
 
 
+def _ann_json(ann):
+    """Annotations are sly.Annotation or raw JSON (for shapes an older SDK cannot build)."""
+    return ann if isinstance(ann, dict) else ann.to_json()
+
+
 class FakeApi:
     """Just the calls the app makes. `datasets`: [(id, name, parent_id)], `images`: {ds_id: [(id, name, ann)]}."""
 
@@ -38,7 +43,7 @@ class FakeApi:
         self.workflow = []
         self.project = SimpleNamespace(
             get_info_by_id=lambda id: SimpleNamespace(id=id, name=project_name),
-            get_meta=lambda id: meta.to_json(),
+            get_meta=lambda id: meta if isinstance(meta, dict) else meta.to_json(),
         )
         self.dataset = SimpleNamespace(
             get_list=self._get_list, get_info_by_id=lambda id: self.ds[id], get_nested=self._get_nested
@@ -65,13 +70,13 @@ class FakeApi:
 
     def _image_list(self, dataset_id):
         return [
-            SimpleNamespace(id=i, name=n, height=ann.img_size[0], width=ann.img_size[1])
+            SimpleNamespace(id=i, name=n, height=_ann_json(ann)["size"]["height"], width=_ann_json(ann)["size"]["width"])
             for i, n, ann in self.images.get(dataset_id, [])
         ]
 
     async def _download_bulk_async(self, dataset_id, image_ids, progress_cb=None):
         by_id = {i: ann for i, _, ann in self.images[dataset_id]}
-        return [SimpleNamespace(image_id=i, annotation=by_id[i].to_json()) for i in image_ids]
+        return [SimpleNamespace(image_id=i, annotation=_ann_json(by_id[i])) for i in image_ids]
 
     async def _download_paths_async(self, ids, paths, progress_cb=None):
         for i, p in zip(ids, paths):
