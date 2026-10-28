@@ -79,3 +79,16 @@ def test_train_and_val_tags(run_export):
     # an image tagged both train and val goes to both splits (unchanged behaviour)
     assert list_images(result_dir, "train") == ["10_both.jpg", "10_none.jpg", "10_t.jpg"]
     assert list_images(result_dir, "val") == ["10_both.jpg", "10_v.jpg"]
+
+
+def test_selected_dataset_includes_its_nested_datasets(run_export):
+    # "Download as" on a dataset that has nested datasets exported only its own images
+    images = {
+        10: [(1, "a.jpg", ann())],
+        11: [(2, "a.jpg", ann())],
+        13: [(4, "a.jpg", ann())],
+        12: [(3, "a.jpg", ann())],
+    }
+    datasets = [(10, "parent", None), (11, "child", 10), (13, "grandchild", 11), (12, "other", None)]
+    result_dir = run_export(FakeApi(META, datasets, images), dataset_id=10)
+    assert list_images(result_dir, "train") == ["10_a.jpg", "11_a.jpg", "13_a.jpg"]

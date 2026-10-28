@@ -107,6 +107,8 @@ In addition, YOLOv8 format implies the presence of train/val datasets. Thus, to 
 2. Open context menu of project -> `Download as` -> `Export to YOLO v8 format` 
 <img src="https://user-images.githubusercontent.com/115161827/235641219-43f67765-99ff-4ece-803b-3cbbb07011c4.png" />
 
+To export a single dataset instead of the whole project, open the context menu of that dataset -> `Download as` -> `Export to YOLO v8 format`. Nested datasets of the selected dataset are exported too.
+
 You can also run the application from the Ecosystem
 <img src="https://user-images.githubusercontent.com/115161827/235641214-50e93901-3c4b-4976-911b-c50940e84972.png" />
 

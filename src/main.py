@@ -17,7 +17,9 @@ class MyExport(sly.app.Export):
 
         project = api.project.get_info_by_id(id=context.project_id)
         if context.dataset_id is not None:
+            # the selected dataset and every dataset nested in it
             datasets = [api.dataset.get_info_by_id(context.dataset_id)]
+            datasets.extend(api.dataset.get_nested(project.id, context.dataset_id))
         else:
             datasets = api.dataset.get_list(project.id, recursive=True)
 
