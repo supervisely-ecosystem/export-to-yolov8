@@ -53,6 +53,7 @@ class MyExport(sly.app.Export):
         all_anns = {}
         total_images_count = 0
         skipped = []
+        used_stems = set()
 
         progress = sly.tqdm_sly(desc="Transforming annotations", total=images_count)
         for ds in datasets:
@@ -65,6 +66,7 @@ class MyExport(sly.app.Export):
                 dir_names,
                 skipped,
                 max_kpts_count,
+                used_stems,
             )
             train_ids, train_img_paths, train_anns = train_info
             val_ids, val_image_paths, val_anns = val_info

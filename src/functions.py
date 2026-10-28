@@ -8,6 +8,22 @@ import yaml
 import src.globals as g
 
 
+def make_unique_name(name: str, used_stems: set) -> str:
+    """Returns ``name`` with its stem made unique among ``used_stems`` (and records it).
+
+    YOLO pairs ``images/<split>/<stem>.<ext>`` with ``labels/<split>/<stem>.txt``, so two images
+    that differ only in extension (``a.jpg``, ``a.png``) must not share a stem.
+    """
+    stem, ext = os.path.splitext(name)
+    candidate = stem
+    i = 1
+    while candidate in used_stems:
+        candidate = f"{stem}_{i}"
+        i += 1
+    used_stems.add(candidate)
+    return candidate + ext
+
+
 def prepare_trainval_dirs(result_dir):
     train_imgs_dir = os.path.join(result_dir, "images/train")
     train_labels_dir = os.path.join(result_dir, "labels/train")
@@ -99,6 +115,7 @@ def process_images(
     dir_names,
     skipped_classes,
     max_kpts_count,
+    used_stems=None,
 ):
     train_ids = []
     train_img_paths = []
@@ -111,9 +128,12 @@ def process_images(
 
     train_labels_dir, train_imgs_dir, val_images_dir, val_labels_dir = dir_names
 
+    if used_stems is None:
+        used_stems = set()
+
     def _write_new_ann(path, content):
-        with open(path, "a") as f1:
-            f1.write("\n".join(content))
+        with open(path, "w") as f1:
+            f1.write("".join(f"{line}\n" for line in content))
 
     images_infos = api.image.get_list(ds.id)
 
@@ -160,7 +180,7 @@ def process_images(
 
         image_processed = False
 
-        unique_image_name = f"{ds.id}_{img_info.name}"
+        unique_image_name = make_unique_name(f"{ds.id}_{img_info.name}", used_stems)
 
         if ann.img_tags.get(g.VAL_TAG_NAME) is not None:
             val_ids.append(img_id)
