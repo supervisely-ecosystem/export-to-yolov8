@@ -26,6 +26,6 @@
     ],
     "context_root": "Download as"
   },
-  "docker_image": "supervisely/base-py-sdk-hardened:6.73.564",
-  "instance_version": "6.15.60"
+  "docker_image": "supervisely/base-py-sdk-hardened:6.74.34",
+  "instance_version": "6.17.22"
 }

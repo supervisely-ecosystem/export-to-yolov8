@@ -8,6 +8,32 @@ import yaml
 import src.globals as g
 
 
+MAX_NAME_BYTES = 255  # file name limit of ext4 and most other file systems
+
+
+def _cut_utf8(text: str, max_bytes: int) -> str:
+    return text.encode("utf-8")[:max_bytes].decode("utf-8", "ignore")
+
+
+def make_unique_name(name: str, used_stems: set) -> str:
+    """Returns ``name`` with its stem made unique among ``used_stems`` (and records it).
+
+    YOLO pairs ``images/<split>/<stem>.<ext>`` with ``labels/<split>/<stem>.txt``, so two images
+    that differ only in extension (``a.jpg``, ``a.png``) must not share a stem. Long stems are cut
+    so that both file names fit in MAX_NAME_BYTES.
+    """
+    stem, ext = os.path.splitext(name)
+    stem_limit = MAX_NAME_BYTES - max(len(ext.encode("utf-8")), len(".txt"))
+    candidate = _cut_utf8(stem, stem_limit)
+    i = 1
+    while candidate in used_stems:
+        suffix = f"_{i}"
+        candidate = _cut_utf8(stem, stem_limit - len(suffix)) + suffix
+        i += 1
+    used_stems.add(candidate)
+    return candidate + ext
+
+
 def prepare_trainval_dirs(result_dir):
     train_imgs_dir = os.path.join(result_dir, "images/train")
     train_labels_dir = os.path.join(result_dir, "labels/train")
@@ -75,14 +101,24 @@ def transform_keypoint_label(class_names, img_size, label: sly.Label, max_kpts_c
     x, y, w, h = round(x, 6), round(y, 6), round(w, 6), round(h, 6)
 
     line = [class_number, x, y, w, h]
-    for node in label.geometry.nodes.values():
-        node: sly.Node
+    # keypoint k must be the same template node on every line: follow the class template order,
+    # and write a node the label does not have as "not labelled" in its own slot
+    nodes = label.geometry.nodes
+    template = label.obj_class.geometry_config or {}
+    template_nodes = list(template.get(sly.GraphNodes.items_json_field, {})) or list(nodes)
+    for node_id in template_nodes:
+        node = nodes.get(node_id)
+        if node is None:
+            line.extend([0, 0])
+            if g.INCLUDE_VISIBILTY_FLAG:
+                line.append(0)
+            continue
         line.append(round(node.location.col / img_size[1], 6))
         line.append(round(node.location.row / img_size[0], 6))
         if g.INCLUDE_VISIBILTY_FLAG:
             line.append(2 if not node.disabled else 1)
-    if len(label.geometry.nodes) < max_kpts_count:
-        for _ in range(max_kpts_count - len(label.geometry.nodes)):
+    if len(template_nodes) < max_kpts_count:
+        for _ in range(max_kpts_count - len(template_nodes)):
             line.extend([0, 0])
             if g.INCLUDE_VISIBILTY_FLAG:
                 line.append(0)
@@ -99,6 +135,7 @@ def process_images(
     dir_names,
     skipped_classes,
     max_kpts_count,
+    used_stems=None,
 ):
     train_ids = []
     train_img_paths = []
@@ -111,9 +148,12 @@ def process_images(
 
     train_labels_dir, train_imgs_dir, val_images_dir, val_labels_dir = dir_names
 
+    if used_stems is None:
+        used_stems = set()
+
     def _write_new_ann(path, content):
-        with open(path, "a") as f1:
-            f1.write("\n".join(content))
+        with open(path, "w") as f1:
+            f1.write("".join(f"{line}\n" for line in content))
 
     images_infos = api.image.get_list(ds.id)
 
@@ -160,7 +200,7 @@ def process_images(
 
         image_processed = False
 
-        unique_image_name = f"{ds.id}_{img_info.name}"
+        unique_image_name = make_unique_name(f"{ds.id}_{img_info.name}", used_stems)
 
         if ann.img_tags.get(g.VAL_TAG_NAME) is not None:
             val_ids.append(img_id)

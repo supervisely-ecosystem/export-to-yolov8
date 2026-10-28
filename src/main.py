@@ -17,7 +17,9 @@ class MyExport(sly.app.Export):
 
         project = api.project.get_info_by_id(id=context.project_id)
         if context.dataset_id is not None:
+            # the selected dataset and every dataset nested in it
             datasets = [api.dataset.get_info_by_id(context.dataset_id)]
+            datasets.extend(api.dataset.get_nested(project.id, context.dataset_id))
         else:
             datasets = api.dataset.get_list(project.id, recursive=True)
 
@@ -53,6 +55,7 @@ class MyExport(sly.app.Export):
         all_anns = {}
         total_images_count = 0
         skipped = []
+        used_stems = set()
 
         progress = sly.tqdm_sly(desc="Transforming annotations", total=images_count)
         for ds in datasets:
@@ -65,6 +68,7 @@ class MyExport(sly.app.Export):
                 dir_names,
                 skipped,
                 max_kpts_count,
+                used_stems,
             )
             train_ids, train_img_paths, train_anns = train_info
             val_ids, val_image_paths, val_anns = val_info
