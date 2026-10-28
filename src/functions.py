@@ -101,14 +101,24 @@ def transform_keypoint_label(class_names, img_size, label: sly.Label, max_kpts_c
     x, y, w, h = round(x, 6), round(y, 6), round(w, 6), round(h, 6)
 
     line = [class_number, x, y, w, h]
-    for node in label.geometry.nodes.values():
-        node: sly.Node
+    # keypoint k must be the same template node on every line: follow the class template order,
+    # and write a node the label does not have as "not labelled" in its own slot
+    nodes = label.geometry.nodes
+    template = label.obj_class.geometry_config or {}
+    template_nodes = list(template.get(sly.GraphNodes.items_json_field, {})) or list(nodes)
+    for node_id in template_nodes:
+        node = nodes.get(node_id)
+        if node is None:
+            line.extend([0, 0])
+            if g.INCLUDE_VISIBILTY_FLAG:
+                line.append(0)
+            continue
         line.append(round(node.location.col / img_size[1], 6))
         line.append(round(node.location.row / img_size[0], 6))
         if g.INCLUDE_VISIBILTY_FLAG:
             line.append(2 if not node.disabled else 1)
-    if len(label.geometry.nodes) < max_kpts_count:
-        for _ in range(max_kpts_count - len(label.geometry.nodes)):
+    if len(template_nodes) < max_kpts_count:
+        for _ in range(max_kpts_count - len(template_nodes)):
             line.extend([0, 0])
             if g.INCLUDE_VISIBILTY_FLAG:
                 line.append(0)
